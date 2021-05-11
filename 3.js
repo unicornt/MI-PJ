@@ -1,10 +1,10 @@
-function callback(){
-    console.log("callback");
+function callback(a, b){
+    console.log("callback", a, b);
 }
 
 function callee(msg, callback){
     console.log(msg);
-    callback();
+    callback(1, 2);
 }
 
 callee("callee", function(){

@@ -6,7 +6,9 @@ function Stack(){
     
 }
 var fs=require("fs");
-var ocode = fs.readFileSync('2.js').toString();
+const { assert } = require('console');
+var fname = '4.js';
+var ocode = fs.readFileSync(fname).toString();
 console.log(ocode);
 ast=esprima.parseScript(ocode);
 var sk = 
@@ -33,16 +35,42 @@ var sk =
             console.log("less than 2 elements in stack");
             return -1;
         }
+    },
+    tope3: ()=>{
+        if(sk.item.length > 2)
+            return sk.item[sk.item.length-3];
+        else{
+            console.log("less than 3 elements in stack");
+            return -1;
+        }
     }
 };
 var Func = new Array();
+var argues = new Array();
 estraverse.traverse(ast, {
     enter: node => {
         if(node.type=='FunctionDeclaration'){
             Func[node.id.name]=1;
+            argues[node.id.name] = node.arguments;
         }
         if(node.type=='CallExpression'){
             Func[node.callee.name]=1;
+
+            argues[node.callee.name] = [];
+            var cnt = 0;
+            for(var i = 0; i < node.arguments.length; i++) {
+                if(node.arguments[i].type == 'Literal') {
+                    argues[node.callee.name].push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
+                    cnt++;
+                }
+                else if(node.arguments[i].type == 'Identifier') {
+                    argues[node.callee.name].push(node.arguments[i]);
+                }
+                else if(node.arguments[i].type == 'FunctionExpression') {
+                    argues[node.callee.name].push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
+                    cnt++;
+                }
+            }
         }
     },
     leave: node => {
@@ -58,14 +86,77 @@ var nnode=asttypes.builders.expressionStatement(
 );
 sk.push(null);
 sk.push(null);
+var root = null;
 estraverse.traverse(ast, {
     enter: node => {
         var par1 = sk.tope();
         var par2 = sk.tope2();
+        if(root == null){ 
+            root=node;
+        }
         console.log(par1,par2);
-        if(node.type=='CallExpression'){
-            var id = par2.body.indexOf(par1);
-            par2.body.splice(id, 0, nnode);
+        if(node.type=='CallExpression' || node.type == 'NewExpression'){
+            if(node.callee.type == 'MemberExpression' && node.callee.object.name == 'console' &&
+                node.callee.property.name == 'log'){
+            }
+            else {
+                if(par2.type == 'VariableDeclaration')
+                {
+                    var par3 = sk.tope3();
+                    var id = par3.body.indexOf(par2);
+                    par3.body.splice(id, 0, nnode);
+                }
+                else {
+                    var id = par2.body.indexOf(par1);
+                    par2.body.splice(id, 0, nnode);
+                }
+                console.log(node.arguments.length);
+                console.log(node.arguments);
+                var arg = new Array();
+                var argue = new Array();
+                var cnt = 0;
+                for(i = 0; i < node.arguments.length; i++) {
+                    var an = node.arguments[i];
+                    if(an.type == 'Literal'){
+                        arg.push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
+                        argue.push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
+                        cnt++;
+                    }
+                    else if(an.type == 'identifier'){
+                        arg.push(an);
+                        argue.push(an);
+                    }
+                    else if(an.type == 'FunctionExpression'){
+                        an.body.body.splice(0, 0, nnode);
+                        arg.push(an);
+                        argue.push(an);
+                    }
+                }
+                for(i = 0; i < node.arguments.length; i++) {
+                    var an = node.arguments[i];
+                    if(an.type == "Identifier" && Func[an.name] == 1){
+                        Func[an.name] = 2;
+                        root.body.push(asttypes.builders.functionDeclaration(
+                            asttypes.builders.identifier("__ast__" + an.name + "__ast__"),
+                            argues[an.name],
+                            asttypes.builders.blockStatement(
+                                [nnode,
+                                asttypes.builders.expressionStatement(
+                                    asttypes.builders.callExpression(
+                                        asttypes.builders.identifier(an.name),
+                                        argues[an.name]
+                                    )
+                                )
+                                ]
+                            )
+                        ))
+                        an.name="__ast__" + an.name + "__ast__";
+                    }
+                    else if(Func[an.name] == 2){
+                        an.name="__ast__" + an.name + "__ast__";
+                    }
+                }
+            }
         }
         sk.push(node);
     },
@@ -75,3 +166,4 @@ estraverse.traverse(ast, {
 })
 const code = escodegen.generate(ast)
 console.log(code)
+fs.writeFileSync(fname[0]+'-out.js', code);
