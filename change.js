@@ -7,7 +7,7 @@ function Stack(){
 }
 var fs=require("fs");
 const { assert } = require('console');
-var fname = '4.js';
+var fname = '1.js';
 var ocode = fs.readFileSync(fname).toString();
 console.log(ocode);
 ast=esprima.parseScript(ocode);
@@ -106,30 +106,40 @@ estraverse.traverse(ast, {
                     var id = par3.body.indexOf(par2);
                     par3.body.splice(id, 0, nnode);
                 }
-                else {
+                else if(par1.type != 'CallExpression' && (par2.type == 'FunctionExpression' || par2.type == 'ArrowFunctionExpression')){
                     var id = par2.body.indexOf(par1);
                     par2.body.splice(id, 0, nnode);
                 }
                 console.log(node.arguments.length);
                 console.log(node.arguments);
-                var arg = new Array();
-                var argue = new Array();
                 var cnt = 0;
                 for(i = 0; i < node.arguments.length; i++) {
                     var an = node.arguments[i];
-                    if(an.type == 'Literal'){
-                        arg.push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
-                        argue.push(asttypes.builders.identifier("__ast__var__"+cnt.toString()));
-                        cnt++;
-                    }
-                    else if(an.type == 'identifier'){
-                        arg.push(an);
-                        argue.push(an);
-                    }
-                    else if(an.type == 'FunctionExpression'){
+                    if(an.type == 'FunctionExpression'){
                         an.body.body.splice(0, 0, nnode);
-                        arg.push(an);
-                        argue.push(an);
+                    }
+                    else if(an.type == 'CallExpression'){
+                        if(Func[an.callee.name] == 2) {
+                            an.callee.name = "__ast__" + an.callee.name + "__ast__"
+                        }
+                        else if(Func[an.callee.name] == 1){
+                            root.body.push(asttypes.builders.functionDeclaration(
+                                asttypes.builders.identifier("__ast__" + an.callee.name + "__ast__"),
+                                argues[an.callee.name],
+                                asttypes.builders.blockStatement(
+                                    [nnode,
+                                    asttypes.builders.expressionStatement(
+                                        asttypes.builders.callExpression(
+                                            asttypes.builders.identifier(an.callee.name),
+                                            argues[an.callee.name]
+                                        )
+                                    )
+                                    ]
+                                )
+                            ))
+                            Func[an.callee.name] = 2;
+                            an.callee.name = "__ast__" + an.callee.name + "__ast__";
+                        }
                     }
                 }
                 for(i = 0; i < node.arguments.length; i++) {
@@ -152,8 +162,8 @@ estraverse.traverse(ast, {
                         ))
                         an.name="__ast__" + an.name + "__ast__";
                     }
-                    else if(Func[an.name] == 2){
-                        an.name="__ast__" + an.name + "__ast__";
+                    else if(an.type == "Identifier" && Func[an.name] == 2){
+                        an.name = "__ast__" + an.name + "__ast__";
                     }
                 }
             }
