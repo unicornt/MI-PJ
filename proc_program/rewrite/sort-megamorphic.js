@@ -1,0 +1,33 @@
+load('/mnt/c/Users/unicornt/Desktop/0/pj/CodeAlchemist/bin/jsLib/V8.js');
+load('sort-base.js');
+codealchemist_log_type_pre('3012417901380999641', ({v1 : ((typeof CreatePackedSmiArray) != ('undefined')) ? (CreatePackedSmiArray) : (undefined)}));
+function SetupMegamorphic(){
+codealchemist_log_type_pre('4051885568687879871', ({v0 : ((typeof CreatePackedSmiArray) != ('undefined')) ? (CreatePackedSmiArray) : (undefined)}));
+CreatePackedSmiArray();
+codealchemist_log_type_post('4051885568687879871', ({v0 : ((typeof CreatePackedSmiArray) != ('undefined')) ? (CreatePackedSmiArray) : (undefined)}));
+codealchemist_log_type_pre('-324174645289786197', ({}));
+Array.prototype.sort.call([]);
+codealchemist_log_type_post('-324174645289786197', ({}));
+codealchemist_log_type_pre('-324174645289786197', ({}));
+Array.prototype.sort.call([]);
+codealchemist_log_type_post('-324174645289786197', ({}));
+codealchemist_log_type_pre('-324174645289786197', ({}));
+Array.prototype.sort.call([]);
+codealchemist_log_type_post('-324174645289786197', ({}));
+codealchemist_log_type_pre('-324174645289786197', ({}));
+Array.prototype.sort.call([]);
+codealchemist_log_type_post('-324174645289786197', ({}));
+codealchemist_log_type_pre('-324174645289786197', ({}));
+Array.prototype.sort.call([]);
+codealchemist_log_type_post('-324174645289786197', ({}));
+codealchemist_log_type_pre('2053261613952208783', ({}));
+Array.prototype.sort.call(({}));
+codealchemist_log_type_post('2053261613952208783', ({}));
+}
+codealchemist_log_type_post('3012417901380999641', ({}));
+codealchemist_log_type_pre('9221287735457985040', ({v2 : ((typeof SetupMegamorphic) != ('undefined')) ? (SetupMegamorphic) : (undefined), v1 : ((typeof Sort) != ('undefined')) ? (Sort) : (undefined), v0 : ((typeof createSortSuite) != ('undefined')) ? (createSortSuite) : (undefined)}));
+createSortSuite('Base', 1000, Sort, SetupMegamorphic);
+codealchemist_log_type_post('9221287735457985040', ({v2 : ((typeof SetupMegamorphic) != ('undefined')) ? (SetupMegamorphic) : (undefined), v1 : ((typeof Sort) != ('undefined')) ? (Sort) : (undefined), v0 : ((typeof createSortSuite) != ('undefined')) ? (createSortSuite) : (undefined)}));
+codealchemist_log_type_pre('-4932947821552364281', ({v1 : ((typeof CreateSortFn) != ('undefined')) ? (CreateSortFn) : (undefined), v2 : ((typeof SetupMegamorphic) != ('undefined')) ? (SetupMegamorphic) : (undefined), v0 : ((typeof createSortSuite) != ('undefined')) ? (createSortSuite) : (undefined)}));
+createSortSuite('MultipleCompareFns', 1000, CreateSortFn([]), SetupMegamorphic);
+codealchemist_log_type_post('-4932947821552364281', ({v1 : ((typeof CreateSortFn) != ('undefined')) ? (CreateSortFn) : (undefined), v2 : ((typeof SetupMegamorphic) != ('undefined')) ? (SetupMegamorphic) : (undefined), v0 : ((typeof createSortSuite) != ('undefined')) ? (createSortSuite) : (undefined)}));

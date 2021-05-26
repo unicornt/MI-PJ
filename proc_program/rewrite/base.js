@@ -1,0 +1,10 @@
+load('/mnt/c/Users/unicornt/Desktop/0/pj/CodeAlchemist/bin/jsLib/V8.js');
+codealchemist_log_type_pre('7838083884550891431', ({}));
+const typedArrayIntConstructors = [];
+codealchemist_log_type_post('7838083884550891431', ({v0 : ((typeof typedArrayIntConstructors) != ('undefined')) ? (typedArrayIntConstructors) : (undefined)}));
+codealchemist_log_type_pre('7838083884550891431', ({}));
+const typedArrayFloatConstructors = [];
+codealchemist_log_type_post('7838083884550891431', ({v0 : ((typeof typedArrayFloatConstructors) != ('undefined')) ? (typedArrayFloatConstructors) : (undefined)}));
+codealchemist_log_type_pre('7838083884550891431', ({}));
+const typedArrayBigIntConstructors = [];
+codealchemist_log_type_post('7838083884550891431', ({v0 : ((typeof typedArrayBigIntConstructors) != ('undefined')) ? (typedArrayBigIntConstructors) : (undefined)}));
